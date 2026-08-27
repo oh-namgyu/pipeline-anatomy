@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'">
+<title>pipeline-anatomy</title>
+<meta name="description" content="Interactive walkthroughs of three real content-automation pipelines, generalized: scheduled runs, quality gates, failure branches and the design decisions behind them.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <a class="brand" href="#/">
+    <span class="brand-mark" aria-hidden="true"></span>
+    <span class="brand-name">pipeline&#8209;anatomy</span>
+  </a>
+  <p class="brand-note" data-t="tagline">Generalized from real production systems — no real identifiers included.</p>
+  <div class="locale" role="group" data-t-aria="language" aria-label="Language">
+    <button type="button" class="loc-btn" data-locale="en" aria-pressed="true">EN</button>
+    <button type="button" class="loc-btn" data-locale="ko" aria-pressed="false">KO</button>
+  </div>
+</header>
+
+<main id="view" class="view"></main>
+
+<footer class="footer">
+  <p data-t="unofficial">Generalized from real production systems, as-built 2026-08; no real identifiers included.</p>
+</footer>
+
+<!-- ---------- templates ---------- -->
+
+<template id="tpl-home">
+  <section class="home">
+    <div class="hero">
+      <p class="hero-kicker" data-t="heroKicker">open the line</p>
+      <h1 class="hero-title" data-t="heroTitle">Inside three real content-automation pipelines — generalized, step by step.</h1>
+      <p class="hero-lead" data-t="heroLead">Each lesson is a piping diagram you can drive.</p>
+    </div>
+    <ul class="grid" data-grid></ul>
+  </section>
+</template>
+
+<template id="tpl-card">
+  <li class="card-slot">
+    <a class="card" data-card>
+      <span class="card-num" data-num></span>
+      <span class="card-title" data-title></span>
+      <span class="card-intro" data-intro></span>
+      <span class="card-foot">
+        <span class="card-meta" data-meta></span>
+        <span class="card-progress" data-progress></span>
+      </span>
+    </a>
+  </li>
+</template>
+
+<template id="tpl-lesson">
+  <section class="lesson">
+    <div class="lesson-head">
+      <a class="back" href="#/" data-t="back">&#8592; All pipelines</a>
+      <h1 class="lesson-title" data-title></h1>
+      <p class="lesson-intro" data-intro></p>
+    </div>
+
+    <div class="widget-zone" data-widgets></div>
+
+    <div class="stage">
+      <div class="canvas" data-canvas></div>
+      <aside class="panel" aria-live="polite" aria-atomic="true" data-t-aria="currentStep" aria-label="Current step">
+        <p class="panel-step" data-stepline></p>
+        <p class="panel-badge"><span class="badge" data-badge hidden></span></p>
+        <p class="panel-text" data-explain></p>
+      </aside>
+    </div>
+
+    <div class="controlbar">
+      <div class="ctrl-group">
+        <button type="button" class="ctrl" data-prev data-t-aria="prevStep" aria-label="Previous step">&#9664;</button>
+        <button type="button" class="ctrl" data-next data-t-aria="nextStep" aria-label="Next step">&#9654;</button>
+        <button type="button" class="ctrl ctrl-auto" data-auto aria-pressed="false" data-t-aria="autoPlay" aria-label="Play the scenario automatically">&#9205;<span class="ctrl-label" data-t="auto">auto</span></button>
+      </div>
+      <div class="dots" data-dots role="tablist" data-t-aria="stepList" aria-label="Steps"></div>
+      <p class="stepind" data-indicator></p>
+    </div>
+
+    <p class="hint" data-t="hint">Use &#8592; and &#8594; to step through.</p>
+
+    <section class="decisions" data-decisions hidden>
+      <h2 class="decisions-head" data-t="decisionsHead">Design decisions</h2>
+      <p class="decisions-lead" data-t="decisionsLead">Why this pipeline is shaped the way it is.</p>
+      <ul class="decision-list" data-decision-list></ul>
+    </section>
+
+    <div class="lesson-foot">
+      <button type="button" class="ctrl quiz-toggle" data-quiz-open aria-expanded="false" aria-controls="quiz-panel">
+        <span class="ctrl-label" data-t="quizOpen">Quiz</span>
+      </button>
+      <p class="quiz-lead" data-t="quizLead">Three questions on how the pipeline behaves.</p>
+    </div>
+
+    <section class="quiz" id="quiz-panel" data-quiz hidden></section>
+
+    <p class="baseline"><span data-t="asOf">As-built baseline</span>: <span data-as-of></span></p>
+  </section>
+</template>
+
+<template id="tpl-decision">
+  <li class="decision" data-decision>
+    <button type="button" class="decision-btn" data-decision-btn aria-expanded="false">
+      <span class="decision-mark" aria-hidden="true"></span>
+      <span class="decision-title" data-decision-title></span>
+    </button>
+    <p class="decision-body" data-decision-body hidden></p>
+  </li>
+</template>
+
+<template id="tpl-fallback">
+  <section class="fallback">
+    <a class="back" href="#/" data-t="back">&#8592; All pipelines</a>
+    <h1 class="lesson-title" data-title></h1>
+    <p class="lesson-intro" data-intro></p>
+    <div class="notice" role="alert" data-notice>
+      <p class="notice-head" data-t="dataError">This lesson could not be played.</p>
+      <p class="notice-body" data-t="dataErrorBody">Its data failed the schema check, so the simulation is unavailable. The overview above is shown instead.</p>
+      <ul class="notice-list" data-errors></ul>
+    </div>
+  </section>
+</template>
+
+<template id="tpl-missing">
+  <section class="fallback">
+    <a class="back" href="#/" data-t="back">&#8592; All pipelines</a>
+    <h1 class="lesson-title" data-t="notFound">Lesson not found</h1>
+    <p class="lesson-intro" data-t="notFoundBody">No lesson is registered under that address.</p>
+  </section>
+</template>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

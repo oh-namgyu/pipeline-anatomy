@@ -189,10 +189,14 @@ inputs: {
 
 ---
 
-## 2. L1 — Audiobook Factory
+## 2. L1 — Audiobook Line
 
-- **title.en:** Audiobook Factory
-- **title.ko:** 오디오북 공장
+> Renamed from the working title used in the stage-1 draft: that title reproduced
+> a real project's own name almost verbatim, and the second-line redact gate
+> caught it. The generalized name has to be generic in fact, not only in spirit.
+
+- **title.en:** Audiobook Line
+- **title.ko:** 오디오북 라인
 - **intro.en:** One long-form narration engine, three output formats, and a queue of titles that outlives any single run. This lesson follows a title from the inventory queue through outline, script, speech and assembly — and shows what the pipeline does when the render dies at part twelve of twenty.
 - **intro.ko:** 하나의 롱폼 내레이션 엔진, 세 가지 출력 포맷, 그리고 어떤 개별 실행보다도 오래 사는 제목 큐. 이 레슨은 제목 하나가 재고 큐에서 아웃라인·대본·음성·조립을 거치는 과정을 따라가고, 20부 중 12부에서 렌더가 죽었을 때 파이프라인이 무엇을 하는지 보여 줍니다.
 
@@ -591,7 +595,7 @@ inputs: {
 | Lesson | Nodes | Widgets | Combinations | Scenarios | Steps | Decisions | Quiz |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | L0 Common Foundations | 11 | 2 | 4 | 4 | 26 | 4 | 3 |
-| L1 Audiobook Factory | 13 | 2 | 6 | 6 | 34 | 5 | 3 |
+| L1 Audiobook Line | 13 | 2 | 6 | 6 | 34 | 5 | 3 |
 | L2 Multi-channel Content Hub | 14 | 2 | 4 | 4 | 28 | 5 | 3 |
 | L3 Story Design→Render Bridge | 13 | 2 | 4 | 4 | 30 | 5 | 3 |
 | **Total** | **51** | — | **18** | **18** | **118** | **19** | **12** |

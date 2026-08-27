@@ -1,6 +1,8 @@
 node_modules/
 .vercel
 test-results/
+playwright-report/
+blob-report/
 
 # OS / editor noise
 .DS_Store
@@ -9,3 +11,7 @@ Thumbs.db
 # local runtime artifacts
 __pycache__/
 *.log
+
+# env files (preventive — no secrets in this project)
+.env*
+!.env.example
