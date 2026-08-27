@@ -4,12 +4,15 @@
  * Adding a lesson is adding a data module: import it here and register it.
  * Nothing else in the app needs to change.
  *
- * `broken.js` (invalid on purpose) is a test fixture, deliberately absent from
- * this registry — app.js registers it on demand from `?lesson=broken`. The
- * engine demo is registered here only until the real pipelines land.
+ * `dummy.js` (engine demo) and `broken.js` (invalid on purpose) are test
+ * fixtures, deliberately absent from this registry — app.js registers them on
+ * demand from `?lesson=dummy` / `?lesson=broken`.
  */
 
-import { dummy } from './dummy.js';
+import { l0 } from './l0_foundations.js';
+import { l1 } from './l1_audiobook.js';
+import { l2 } from './l2_hub.js';
+import { l3 } from './l3_bridge.js';
 
 const registry = new Map();
 
@@ -29,4 +32,7 @@ export function allLessons() {
   return [...registry.values()];
 }
 
-register(dummy);
+register(l0);
+register(l1);
+register(l2);
+register(l3);

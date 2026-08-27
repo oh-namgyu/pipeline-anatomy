@@ -29,13 +29,25 @@ async function pick(page, widget, value) {
   await page.locator(`[data-widget="${widget}"][data-value="${value}"]`).click();
 }
 
-test('the home page opens a lesson card', async ({ page }) => {
+test('the home page lists the four pipelines and opens one', async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('.hero-title')).toContainText('content-automation pipelines');
-  const card = page.locator('[data-card]').first();
+  await expect(page.locator('[data-card]')).toHaveCount(4);
+  await expect(page.locator('[data-lesson-id="dummy"]')).toHaveCount(0);
+  const card = page.locator('[data-lesson-id="l0-foundations"]');
+  await expect(card.locator('[data-title]')).toHaveText('Common Foundations');
+  await expect(card.locator('[data-meta]')).toContainText('5 min');
   await expect(card.locator('[data-progress]')).toHaveText('not started');
   await card.click();
+  await expect(page).toHaveURL(/#\/lesson\/l0-foundations$/);
   await expect(page.locator('svg.diagram')).toBeVisible();
+  await expect(page.locator('[data-indicator]')).toHaveText('1 / 8');
+});
+
+test('the engine demo is reachable only through the test fixture', async ({ page }) => {
+  await page.goto('/#/lesson/dummy');
+  await expect(page.locator('body[data-ready="true"]')).toBeAttached();
+  await expect(page.locator('.lesson-title')).toHaveText('Lesson not found');
 });
 
 test('the control bar steps forward and back', async ({ page }) => {
@@ -215,7 +227,7 @@ test('a broken lesson falls back to the overview view instead of crashing', asyn
   expect(errors).toEqual([]);
 
   await page.locator('.back').click();
-  await expect(page.locator('[data-card]').first()).toBeVisible();
+  await expect(page.locator('[data-lesson-id="l0-foundations"]')).toBeVisible();
 });
 
 test('the app loads no external resource', async ({ page }) => {
