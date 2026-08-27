@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  unit:
+    name: unit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+          cache: npm
+      # The only dependency is @playwright/test (dev). No browser download
+      # here: the unit suite is pure data validation and never opens one.
+      - run: npm ci
+      - run: node --test "tests/*.test.mjs"
+        env:
+          # The whole suite includes the redaction gate, so the salt is passed
+          # here too — without it the salted-HMAC half skips (loudly) and this
+          # job would report green on a coverage it did not have.
+          REDACT_SALT: ${{ secrets.REDACT_SALT }}
+
+  redact:
+    name: redact
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci
+      # Deliberately a job of its own, even though `unit` already runs this
+      # file. Generalization is this project's one non-obvious guarantee, and a
+      # failure has to read as "redaction", not as "some test broke".
+      #
+      # On a fork, `secrets.REDACT_SALT` is empty and the salted-HMAC half
+      # skips with an explicit message; the shape rules — paths, ports,
+      # handles, clock times, absolute URLs — still run in full.
+      - run: node --test "tests/redact.test.mjs"
+        env:
+          REDACT_SALT: ${{ secrets.REDACT_SALT }}
+
+  e2e:
+    name: e2e (chromium)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      # playwright.config.mjs boots the static site with python3's stdlib
+      # server — no build step, no app server of our own, no container.
+      - run: npx playwright test

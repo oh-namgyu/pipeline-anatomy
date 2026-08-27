@@ -59,11 +59,34 @@ const ALLOWED_HANDLES = new Set([
   '@see', '@throws', '@deprecated', '@author', '@license', '@module', '@ignore',
 ]);
 
-/** The only absolute URLs a static, self-contained app legitimately carries. */
+/**
+ * The only absolute URLs a static, self-contained app legitimately carries.
+ *
+ * Exactly two kinds belong here:
+ *
+ *   1. Standards and toolchain endpoints the code has to name — the SVG
+ *      namespace, the local dev server, the npm registry, the `vercel.json`
+ *      editor schema.
+ *   2. This project's own public addresses, added when the packaging docs were
+ *      written — its repository (badges, clone URL, security advisories), the
+ *      badge host, its live demo, and the sibling project this lesson engine
+ *      was ported from.
+ *
+ * Nothing describing a real production system may be added. A candidate entry
+ * has to be an address *of this repository* or *of a public tool*; a channel,
+ * feed, dashboard or endpoint belonging to the systems these lessons
+ * generalize is exactly what this rule exists to stop, and no allowlist entry
+ * can be the reason one gets through.
+ */
 const ALLOWED_URL_PREFIXES = [
   'http://www.w3.org/',
   'http://localhost',
   'https://registry.npmjs.org/',
+  'https://openapi.vercel.sh/vercel.json',           // vercel.json editor schema
+  'https://github.com/oh-namgyu/pipeline-anatomy',   // this repository
+  'https://github.com/oh-namgyu/cc-anatomy',         // sibling project: engine origin
+  'https://img.shields.io/badge/',                   // README status badges
+  'https://pipeline-anatomy.vercel.app',             // live demo
 ];
 
 function isAllowed(ruleId, match) {
@@ -161,6 +184,25 @@ test('the allowlist lets the toolchain through and nothing else', () => {
   assert.deepEqual(patternFindings('fixture', '@media (max-width: 860px) { }'), []);
   assert.deepEqual(patternFindings('fixture', 'const NS = "http://www.w3.org/2000/svg";'), []);
   assert.equal(patternFindings('fixture', frag('ping ', '@', 'notallowed here')).length, 1);
+});
+
+test('the URL allowlist covers this project only, not neighbours that look like it', () => {
+  const ours = [
+    'https://github.com/oh-namgyu/pipeline-anatomy/actions/workflows/ci.yml/badge.svg',
+    'https://github.com/oh-namgyu/pipeline-anatomy/security/advisories/new',
+    'https://github.com/oh-namgyu/cc-anatomy',
+    'https://img.shields.io/badge/License-MIT-blue.svg',
+    'https://pipeline-anatomy.vercel.app',
+    'https://openapi.vercel.sh/vercel.json',
+  ];
+  assert.deepEqual(patternFindings('fixture', ours.join('\n')), []);
+
+  // Same hosts, someone else's property: still a finding.
+  const theirs = [
+    frag('https', '://', 'github.com/someone-else/their-repo'),
+    frag('https', '://', 'some-other-app.vercel.app'),
+  ];
+  assert.equal(patternFindings('fixture', theirs.join('\n')).length, theirs.length);
 });
 
 test('the HMAC denylist finds a planted term, its variants and its evasions', () => {

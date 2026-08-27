@@ -1,0 +1,20 @@
+# The deploy is the static app only: index.html, css/, js/, favicon.svg.
+# Everything below is repository furniture and must not be published.
+#
+# docs/ is excluded for a second reason as well: it holds the content spec and
+# the screenshot sources, which belong in the repository but have no business
+# being served.
+docs/
+tests/
+e2e/
+scripts/
+node_modules/
+playwright.config.mjs
+package.json
+package-lock.json
+test-results/
+playwright-report/
+blob-report/
+.github/
+CONTRIBUTING.md
+SECURITY.md
