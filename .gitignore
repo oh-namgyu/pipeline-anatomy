@@ -1,0 +1,11 @@
+node_modules/
+.vercel
+test-results/
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+
+# local runtime artifacts
+__pycache__/
+*.log
