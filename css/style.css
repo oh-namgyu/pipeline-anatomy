@@ -244,6 +244,16 @@ code {
   color: var(--text-dim);
 }
 
+.hero-meta {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--rule-soft);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--text-mute);
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(268px, 1fr));
@@ -972,6 +982,41 @@ code {
   }
 }
 
+/* Touch sizing: at tablet width and below every control is at least 40px on
+   its short side, including the step dots (padding gives the hit area, the
+   painted dot stays small through background-clip). */
+@media (max-width: 860px) {
+  .ctrl {
+    min-height: 44px;
+  }
+
+  .chip,
+  .seg,
+  .loc-btn {
+    min-height: 40px;
+  }
+
+  .widget-values {
+    gap: 8px;
+  }
+
+  .dot {
+    width: 40px;
+    height: 40px;
+    padding: 15px;
+    border: 0;
+    background-clip: content-box;
+  }
+
+  .dot.is-on {
+    box-shadow: none;
+  }
+
+  .dots {
+    gap: 0;
+  }
+}
+
 @media (max-width: 720px) {
   .topbar {
     flex-wrap: wrap;
@@ -995,5 +1040,28 @@ code {
   .dots {
     order: 3;
     flex-basis: 100%;
+  }
+
+  .decision-body {
+    padding-left: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  .edge.is-pulse .edge-line {
+    animation: none;
+    stroke-dasharray: none;
+  }
+
+  .card:hover {
+    transform: none;
   }
 }
