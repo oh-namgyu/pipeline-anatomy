@@ -183,4 +183,4 @@ be traced to the other.
 
 ## License
 
-[MIT](LICENSE) © 2026 oh-namgyu.
+MIT — see [LICENSE](LICENSE). Security policy: [SECURITY.md](SECURITY.md).
