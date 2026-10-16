@@ -176,8 +176,6 @@ be traced to the other.
   currently duplicated between this project and its sibling explainer. Extracting
   them into one package is the fix; the interim measure is the source-commit
   header on every ported file.
-- **Screen-reader pass**: a live region narrating step changes, beyond the
-  current keyboard and `prefers-reduced-motion` support.
 
 ---
 
